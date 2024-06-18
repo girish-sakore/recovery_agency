@@ -1,0 +1,13 @@
+<h3>Select Columns</h3>
+<% @columns = AllocationDraft.column_names - ['id'] %>
+<% @user_preference = current_admin_user.user_preference || UserPreference.new %>
+<form action="<%= save_column_preferences_admin_allocation_drafts_path %>" method="post">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <% @columns.each do |column| %>
+    <div>
+      <%= check_box_tag 'columns[]', column, @user_preference.column_preferences.include?(column) %>
+      <%= column.humanize %>
+    </div>
+  <% end %>
+  <%= submit_tag 'Save Preferences' %>
+</form>

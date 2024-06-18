@@ -1,0 +1,48 @@
+<%#= form_tag({ action: :import_allocation, method: :post, multipart: true }) do %>
+  <%# <div class="form-group"> %>
+    <%#= label_tag :file, "Select an Excel file:" %>
+    <%#= file_field_tag :file, accept: ".xls, .xlsx" %>
+  <%# </div> %>
+
+  <%#= submit_tag "Upload / Import", class: "btn btn-primary" %>
+<%# end %>
+
+<form id="uploadForm" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="file">Select an Excel file:</label>
+    <input type="file" name="file" id="file" accept=".xls, .xlsx" class="form-control-file">
+  </div>
+  <button type="submit" class="btn btn-primary">Upload / Import</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#uploadForm').submit(function(event) {
+      event.preventDefault();
+      var formData = new FormData($(this)[0]);
+      
+      $.ajax({
+        url: '/admin/allocation_drafts/import_allocation',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          console.log('response -- ', response);
+          window.location.href = response.redirect_url;
+          if (response.errors.length == 0) {
+            alert('Imported successfully.');
+          } else {
+            alert('Some rows are not uploaded successfully');
+            localStorage
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(xhr.responseText);
+          alert('Something went wrong - ', error);
+        }
+      });
+    });
+  });
+</script>
