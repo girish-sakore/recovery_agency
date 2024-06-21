@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_18_162557) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_21_183746) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,6 +36,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_162557) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role", default: 0
+    t.string "name"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
@@ -87,6 +89,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_162557) do
     t.string "all_dt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "caller_id"
+    t.bigint "executive_id"
+    t.index ["caller_id"], name: "index_allocation_drafts_on_caller_id"
+    t.index ["executive_id"], name: "index_allocation_drafts_on_executive_id"
   end
 
   create_table "user_preferences", force: :cascade do |t|
@@ -97,5 +103,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_162557) do
     t.index ["admin_user_id"], name: "index_user_preferences_on_admin_user_id"
   end
 
+  add_foreign_key "allocation_drafts", "admin_users", column: "caller_id"
+  add_foreign_key "allocation_drafts", "admin_users", column: "executive_id"
   add_foreign_key "user_preferences", "admin_users"
 end
