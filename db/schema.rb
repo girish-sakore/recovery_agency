@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_21_183746) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_25_120340) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -91,8 +91,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_183746) do
     t.datetime "updated_at", null: false
     t.bigint "caller_id"
     t.bigint "executive_id"
+    t.index ["agreement_id"], name: "index_allocation_drafts_on_agreement_id"
+    t.index ["caller_id", "created_at"], name: "index_allocation_drafts_on_caller_id_and_created_at"
     t.index ["caller_id"], name: "index_allocation_drafts_on_caller_id"
+    t.index ["created_at"], name: "index_allocation_drafts_on_created_at"
+    t.index ["customer_name"], name: "index_allocation_drafts_on_customer_name"
+    t.index ["executive_id", "created_at"], name: "index_allocation_drafts_on_executive_id_and_created_at"
     t.index ["executive_id"], name: "index_allocation_drafts_on_executive_id"
+    t.index ["ptp_date"], name: "index_allocation_drafts_on_ptp_date"
+    t.index ["updated_at"], name: "index_allocation_drafts_on_updated_at"
   end
 
   create_table "user_preferences", force: :cascade do |t|

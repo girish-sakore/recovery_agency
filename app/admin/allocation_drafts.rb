@@ -1,6 +1,6 @@
 ActiveAdmin.register AllocationDraft do
   before_action :left_sidebar!
-  before_action :check_admin_access
+  # before_action :check_admin_access
 
   permit_params :segment, :pool, :branch, :agreement_id, :customer_name, :pro, :bkt, :fos_name, :fos_mobile_no,
                 :caller_name, :caller_mo_number, :f_code, :ptp_date, :feedback, :res, :emi_coll, :cbc_coll, :total_coll,
@@ -8,6 +8,8 @@ ActiveAdmin.register AllocationDraft do
                 :penal_pending, :cycle, :tenure, :disb_date, :emi_start_date, :emi_end_date, :manufacturer_desc, :asset_cat,
                 :supplier, :system_bounce_reason, :reference1_name, :reference2_name, :so_name, :ro_name, :all_dt,
                 :caller_id, :executive_id
+
+  config.per_page = 50
 
   form do |f|
     f.inputs do
@@ -106,10 +108,16 @@ ActiveAdmin.register AllocationDraft do
 
     def authorized?(action, subject = nil)
       case action
+      when :index
+        current_admin_user.admin? || current_admin_user.caller? || current_admin_user.executive?
       when :read, :update
-        current_admin_user.admin? || 
-        (current_admin_user.caller? && subject.caller_id == current_admin_user.id) || 
-        (current_admin_user.executive? && subject.executive_id == current_admin_user.id)
+        if subject.is_a?(AllocationDraft)
+          current_admin_user.admin? || 
+          (current_admin_user.caller? && subject.caller_id == current_admin_user.id) || 
+          (current_admin_user.executive? && subject.executive_id == current_admin_user.id)
+        else
+          current_admin_user.admin? || current_admin_user.caller? || current_admin_user.executive?
+        end
       else
         current_admin_user.admin?
       end
