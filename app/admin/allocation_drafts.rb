@@ -16,8 +16,8 @@ ActiveAdmin.register AllocationDraft do
       if current_admin_user.admin?
         f.semantic_errors
         f.inputs
-        f.input :caller, collection: AdminUser.where(role: :caller).pluck(:name, :id)
-        f.input :executive, collection: AdminUser.where(role: :executive).pluck(:name, :id)
+        f.input :caller, collection: -> { AdminUser.where(role: :caller).pluck(:name, :id) }.call
+        f.input :executive, collection: -> { AdminUser.where(role: :executive).pluck(:name, :id) }.call
       else
         # Show only editable fields for callers and executives
         f.input :feedback
@@ -144,7 +144,7 @@ ActiveAdmin.register AllocationDraft do
 
   # Batch actions
   batch_action :assign_caller, form: {
-    caller_id: AdminUser.where(role: :caller).pluck(:name, :id)
+    caller_id: -> { AdminUser.where(role: :caller).pluck(:name, :id) }
   } do |ids, inputs|
     AllocationDraft.where(id: ids).find_each do |allocation|
       allocation.update(caller_id: inputs[:caller_id])
@@ -153,7 +153,7 @@ ActiveAdmin.register AllocationDraft do
   end
 
   batch_action :assign_executive, form: {
-    executive_id: AdminUser.where(role: :executive).pluck(:name, :id)
+    executive_id: -> { AdminUser.where(role: :executive).pluck(:name, :id) }
   } do |ids, inputs|
     AllocationDraft.where(id: ids).update_all(executive_id: inputs[:executive_id])
     redirect_to collection_path, notice: "Executive assigned to selected allocations"
