@@ -1,5 +1,5 @@
 <h3>Select Columns</h3>
-<% @columns = AllocationDraft.column_names - ['id'] %>
+<% @columns = AllocationDraft.column_names %>
 <% @user_preference = current_admin_user.user_preference || UserPreference.new %>
 <form action="<%= save_column_preferences_admin_allocation_drafts_path %>" method="post">
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>

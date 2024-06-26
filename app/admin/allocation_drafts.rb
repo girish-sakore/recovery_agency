@@ -33,7 +33,6 @@ ActiveAdmin.register AllocationDraft do
 
   index do
     selectable_column
-    id_column
     columns = current_admin_user.user_preference&.column_preferences || AllocationDraft.column_names
     columns.each do |column|
       column column.to_sym
